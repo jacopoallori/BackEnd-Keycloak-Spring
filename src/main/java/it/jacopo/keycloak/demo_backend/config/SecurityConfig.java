@@ -28,6 +28,7 @@ public class SecurityConfig {
 
                 // tutte le richieste devono essere autenticate
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/users/**").hasRole("CAPO")
                         .requestMatchers("/api/capo/**").hasRole("CAPO")
                         .requestMatchers("/api/senior/**").hasRole("SENIOR")
                         .requestMatchers("/api/junior/**").hasRole("JUNIOR")

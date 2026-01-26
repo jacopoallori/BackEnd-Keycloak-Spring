@@ -1,9 +1,41 @@
 server:
   port: 8083
 
+
 spring:
+  application:
+    name: backend-service
+
+
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8080/realms/Keycloack_Login_Prova
+
+
+keycloak:
+  server-url: http://localhost:8080
+  realm: Keycloack_Login_Prova
+  admin-client:
+    client-id: backend-admin-client
+    client-secret: Cyt3FtHReKepKo99Y4rcqik4Ut7zQgDs
+
+
+logging:
+  level:
+    root: OFF
+    org:
+      springframework:
+        security: OFF           # Disabilita i log di Spring Security
+        web:
+          servlet:
+    it:
+      jacopo:
+        keycloak:
+          demo_backend:
+            logging:
+              webclient:
+                WebClientLoggingFilter: DEBUG # Disabilita i log del WebClient
+            controller: OFF
+            #clients: OFF
