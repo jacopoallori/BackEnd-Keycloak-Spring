@@ -1,11 +1,15 @@
 package it.jacopo.keycloak.demo_backend.client;
 
+import it.jacopo.keycloak.demo_backend.dto.KeycloakUserDTO;
+import it.jacopo.keycloak.demo_backend.dto.UserFilterDTO;
 import it.jacopo.keycloak.demo_backend.dto.external.KeycloakUserExternalDTO;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -42,4 +46,71 @@ public class KeycloakAdminClient {
             throw new RuntimeException("Errore durante la richiesta della lista utenti: " + e.getMessage());
         }
     }
+
+
+    //*
+    // Ottieni utenti con filtro campo Id
+    //*
+    public List<KeycloakUserExternalDTO> searchUsersForId(String token,
+                                                     String id,
+                                                     int first,
+                                                     int max) {
+
+
+            KeycloakUserExternalDTO user = webClient.get()
+                    .uri(serverUrl + "/admin/realms/" + realm + "/users/" + id)
+                    .headers(h -> h.setBearerAuth(token))
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .bodyToMono(KeycloakUserExternalDTO.class)
+                    .block();
+
+            return user == null ? List.of() : List.of(user);
+    }
+
+    //*
+    // Ottieni utenti con filtri
+    //*
+    public List<KeycloakUserExternalDTO> searchUsers(String token,
+                                             UserFilterDTO userFilterDTO,
+                                             int first,
+                                             int max) {
+
+        UriComponentsBuilder b = UriComponentsBuilder
+                .fromUriString(serverUrl)
+                .path("/admin/realms/{realm}/users")
+                .queryParam("first", first)
+                .queryParam("max", max);
+
+
+        addIfPresent(b, "username", userFilterDTO.getUsername());
+        addIfPresent(b, "firstName", userFilterDTO.getFirstName());
+        addIfPresent(b, "lastName", userFilterDTO.getLastName());
+        addIfPresent(b, "email", userFilterDTO.getEmail());
+        addIfPresent(b, "enabled", userFilterDTO.getEnabled());
+        addIfPresent(b, "emailVerified", userFilterDTO.getEmailVerified());
+
+        // Exact (se lo vuoi)
+        b.queryParam("exact", false);
+
+        String uri = b.buildAndExpand(realm).toUriString();
+
+        return webClient.get()
+                .uri(uri)
+                .headers(h -> h.setBearerAuth(token))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToFlux(KeycloakUserExternalDTO.class)
+                .collectList()
+                .block();
+    }
+
+    private void addIfPresent(UriComponentsBuilder b, String name, String value) {
+        if (value != null && !value.isBlank()) b.queryParam(name, value);
+    }
+
+    private void addIfPresent(UriComponentsBuilder b, String name, Boolean value) {
+        if (value != null) b.queryParam(name, value);
+    }
+
 }
