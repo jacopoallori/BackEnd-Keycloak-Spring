@@ -3,6 +3,7 @@ package it.jacopo.keycloak.demo_backend.client.admin;
 import it.jacopo.keycloak.demo_backend.dto.UserFilterDTO;
 import it.jacopo.keycloak.demo_backend.dto.external.CreateUserExternalDTO;
 import it.jacopo.keycloak.demo_backend.dto.external.KeycloakUserExternalDTO;
+import it.jacopo.keycloak.demo_backend.dto.external.UpdateUserExternalDTO;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,10 +133,30 @@ public class KeycloakAdminClient {
     //*
     // Aggiornamento dati di utente
     //*
+    public Mono<Void> updateUser(String token, String userId, KeycloakUserExternalDTO dto) {
+        return webClient.put()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/admin/realms/{realm}/users/{userId}")
+                        .build(realm, userId))
+                .headers(h -> h.setBearerAuth(token))
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(dto)
+                .retrieve()
+                .bodyToMono(Void.class);
+    }
 
     //*
     // Eliminazione di un utente
     //*
+    public Mono<Void> deleteUser(String token, String userId) {
+        return webClient.delete()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/admin/realms/{realm}/users/{userId}")
+                        .build(realm, userId))
+                .headers(h -> h.setBearerAuth(token))
+                .retrieve()
+                .bodyToMono(Void.class);
+    }
 
     //*
     // Abilitazione/Disabilitazione di un utente

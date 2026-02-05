@@ -63,7 +63,7 @@ public class AdminController {
     //*
     @PostMapping(path = "/user/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createUser(@RequestBody UserCreateDTO newUser) {
-        log.info("Controller: {}, GET - {} chiamato", "AdminManageRolesRealmController" ,"/api/admin/user/create");
+        log.info("Controller: {}, GET - {}", "AdminController" ,"/api/admin/user/create");
         log.info("Request Body: roles={}", newUser.toString());
 
         userService.createUser(newUser);
@@ -72,10 +72,23 @@ public class AdminController {
     //*
     // Aggiorna dati utente
     //*
+    @PutMapping(path = "/user/update/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void updateUser(@PathVariable String userId, @RequestBody KeycloakUserDTO updateUser) {
+        log.info("Controller: {}, PUT - {}, per UserId: {}", "AdminController" ,"/api/admin/user/update/{userId}", userId);
+        log.info("Request Body: userId={}, updateUser={}", userId, updateUser.toString());
+
+        userService.updateUser(userId, updateUser);
+    }
 
     //*
     // Elimina utente
     //*
+    @DeleteMapping("user/delete/{userId}")
+    public void deleteUser(@PathVariable String userId) {
+        log.info("Controller: {}, Delete - {}, per UserId: {}", "AdminController" ,"/api/admin/user/delete/{userId}", userId);
+
+        userService.deleteUser(userId);
+    }
 
     //*
     // Abilita/disabilita utente
@@ -88,6 +101,4 @@ public class AdminController {
     //*
     // Verifica mail
     //*
-
-
 }

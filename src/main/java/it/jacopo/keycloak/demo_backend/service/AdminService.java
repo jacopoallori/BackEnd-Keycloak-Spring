@@ -61,6 +61,24 @@ public class AdminService {
     //*
     public void createUser(UserCreateDTO userCreateDTO) {
         String token = tokenClient.getAdminAccessToken();
+        //Mapper a UserCreateDTO a CreateUserExternalDTO
         keycloakAdminClient.createUser(token, new CreateUserExternalDTO());
+    }
+
+    //*
+    //Aggiorna un utente
+    //*
+    public void updateUser(String userId, KeycloakUserDTO updateUser){
+        String token = tokenClient.getAdminAccessToken();
+        //Mapper da null a KeycloakUserExternalDTO
+        keycloakAdminClient.updateUser(token, userId, new KeycloakUserExternalDTO());
+    }
+
+    //*
+    // Elimina un utente
+    //*
+    public void deleteUser(String userId){
+        String token = tokenClient.getAdminAccessToken();
+        keycloakAdminClient.deleteUser(token, userId);
     }
 }
