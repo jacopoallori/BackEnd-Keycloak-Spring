@@ -1,7 +1,7 @@
-package it.jacopo.keycloak.demo_backend.client.clients;
+package it.jacopo.keycloak.demo_backend.client.admin.realm;
 
-import it.jacopo.keycloak.demo_backend.client.KeycloakTokenClient;
-import it.jacopo.keycloak.demo_backend.dto.external.KeycloakRoleExternalDTO;
+import it.jacopo.keycloak.demo_backend.client.admin.KeycloakTokenClient;
+import it.jacopo.keycloak.demo_backend.dto.KeycloakRoleDTO;
 import it.jacopo.keycloak.demo_backend.dto.external.RoleRepresentationExternalDTO;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -19,53 +19,51 @@ import static it.jacopo.keycloak.demo_backend.exception.util.MapKeycloakError.ma
 
 @Component
 @RequiredArgsConstructor
-public class KeycloakAdminClientsClient {
-    private static final Logger log = LoggerFactory.getLogger(KeycloakAdminClientsClient.class);
-
-    private final String serverUrl = "http://localhost:8080";
-    private final String realm = "Keycloack_Login_Prova";
-    private final String clientUuid = "33891910-5296-4c9d-96cc-1bb43f32af16"; //KeyCloak_Prova
+public class KeycloakAdminRealmClient {
+    private static final Logger log = LoggerFactory.getLogger(KeycloakAdminRealmClient.class);
 
     private final WebClient webClient ;
     private final KeycloakTokenClient tokenClient;
 
+    private final String serverUrl = "http://localhost:8080";
+    private final String realm = "Keycloack_Login_Prova";
+
     //*
-    // Ottieni i ruoli assegnati a un singolo utenti dal Keycloak a livello di Clients
+    // Ottieni i ruoli assegnati a un singolo utenti dal Keycloak a livello di Realm
     //*
-    public List<KeycloakRoleExternalDTO> getRolesUser(String token, String userId) {
-        log.debug("Richiesta lista ruoli per utente userId={}", userId);
+    public List<KeycloakRoleDTO> getRolesUser(String token, String userId) {
+        log.debug("Richiesta lista utente userId={}", userId);
 
         try {
-            List<KeycloakRoleExternalDTO> response = webClient.get()
+            List<KeycloakRoleDTO> response = webClient.get()
                     .uri(serverUrl + "/admin/realms/" + realm
                             + "/users/" + userId
-                            + "/role-mappings/clients/" + clientUuid + "/composite")
+                            + "/role-mappings/realm/composite")
                     .headers(h -> h.setBearerAuth(token))
                     .retrieve()
-                    .bodyToFlux(KeycloakRoleExternalDTO.class)
+                    .bodyToFlux(KeycloakRoleDTO.class)
                     .collectList()
                     .block();
 
             log.debug("Keycloak risposta lista ruoli per UserId:{} - Response: {}", response, userId);
             return response;
-        } catch (Exception e){
+        }catch (Exception e){
             log.error("Errore durante la richiesta dei ruoli per userId={}: {}", userId, e.getMessage());
             throw new RuntimeException("Errore durante la richiesta dei ruoli: " + e.getMessage());
         }
     }
 
     //*
-    // Assegna ruoli a un singolo utente dal Keycloak a livello di Clients
+    // Assegna ruoli a un singolo utente dal Keycloak a livello di Realm
     //*
     public void addRealmRolesToUser(String token, String userId, List<RoleRepresentationExternalDTO> roles) {
         log.debug("Aggiunti ruoli: {}, per utente userId: {}", roles.toString(), userId);
 
         try {
-            log.info("BODY REQUEST :{}", roles);
             webClient.post()
                     .uri(serverUrl + "/admin/realms/" + realm
                             + "/users/" + userId
-                            + "/role-mappings/clients/" + clientUuid)
+                            + "/role-mappings/realm")
                     .headers(h -> h.setBearerAuth(token))
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(roles) // array di RoleRepresentation
@@ -79,26 +77,26 @@ public class KeycloakAdminClientsClient {
                     .block();
         }catch (Exception e){
             log.error("Errore durante l'aggiunta dei ruoli per userId={}: {}", userId, e.getMessage());
-            throw new RuntimeException("Errore durante l'aggiunta dei ruoli: " + e.getMessage());
+            throw e;
         }
 
         log.debug("Ruoli aggiunti con successo.");
     }
 
     //*
-    // Rimuovi ruoli a un singolo utente dal Keycloak a livello di Clients
+    // Rimuovi ruoli a un singolo utente dal Keycloak a livello di Realm
     //*
-    public void removeRealmRolesToUser(String token, String userId, List<RoleRepresentationExternalDTO> list) {
-        log.debug("Rimossi ruoli: {}, per utente userId: {}", list.toString(), userId);
+    public void removeRealmRolesToUser(String token, String userId, List<RoleRepresentationExternalDTO> roles) {
+        log.debug("Rimossi ruoli: {}, per utente userId: {}", roles.toString(), userId);
 
         try {
             webClient.method(HttpMethod.DELETE)
                     .uri(serverUrl + "/admin/realms/" + realm
                             + "/users/" + userId
-                            + "/role-mappings/clients/" + clientUuid )
+                            + "/role-mappings/realm")
                     .headers(h -> h.setBearerAuth(token))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(list) // array di RoleRepresentation
+                    .bodyValue(roles) // array di RoleRepresentation
                     .retrieve()
                     .onStatus(HttpStatusCode::isError, resp ->
                             resp.bodyToMono(String.class)
@@ -107,7 +105,7 @@ public class KeycloakAdminClientsClient {
                     )
                     .toBodilessEntity()
                     .block();
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("Errore durante la rimozione dei ruoli per userId={}: {}", userId, e.getMessage());
             throw new RuntimeException("Errore durante la rimozione dei ruoli: " + e.getMessage());
         }

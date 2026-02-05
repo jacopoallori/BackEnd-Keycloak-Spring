@@ -1,7 +1,7 @@
 package it.jacopo.keycloak.demo_backend.service.admin.clients;
 
-import it.jacopo.keycloak.demo_backend.client.KeycloakTokenClient;
-import it.jacopo.keycloak.demo_backend.client.clients.KeycloakAdminClientsClient;
+import it.jacopo.keycloak.demo_backend.client.admin.KeycloakTokenClient;
+import it.jacopo.keycloak.demo_backend.client.admin.clients.KeycloakAdminClientsClient;
 import it.jacopo.keycloak.demo_backend.dto.KeycloakRoleDTO;
 import it.jacopo.keycloak.demo_backend.dto.KeycloakUserRoleDTO;
 import it.jacopo.keycloak.demo_backend.dto.external.KeycloakRoleExternalDTO;

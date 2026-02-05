@@ -17,6 +17,9 @@ public class AdminManageRolesRealmController {
     private static final Logger log = LoggerFactory.getLogger(AdminManageRolesRealmController.class);
     private final AdminRealmService adminRealmService;
 
+    //*
+    //Dato un id utente ottiene i suoi ruoli a livello di Realm
+    //*
     @GetMapping(path = "/{id}/getRoleUser")
     public List<KeycloakRoleDTO> getRolesUser(@PathVariable("id") String userId) {
         log.info("Controller: {}, GET - {} chiamato", "AdminManageRolesRealmController" ,"/api/admin/rolesRealm/"+userId+"/getRoleUser");
@@ -26,6 +29,9 @@ public class AdminManageRolesRealmController {
         return response;
     }
 
+    //*
+    //Assegna X ruoli ad un utente a livello di Realm
+    //*
     @PostMapping("/{id}/addRoles")
     public void addRolesToUser(@PathVariable("id") String userId, @RequestBody List<KeycloakUserRoleDTO> listRoles) {
         log.info("Controller: {}, GET - {} chiamato", "AdminManageRolesRealmController" ,"/api/admin/rolesRealm/"+userId+"/addRoles");
@@ -35,6 +41,9 @@ public class AdminManageRolesRealmController {
         adminRealmService.addRealmRolesToUser(userId, listRoles);
     }
 
+    //*
+    //Rimuovi X ruoli ad un utente a livello di Realm
+    //*
     @PostMapping("/{id}/removeRoles")
     public void removeRolesToUser(@PathVariable("id") String userId, @RequestBody List<KeycloakUserRoleDTO> listRoles) {
         log.info("Controller: {}, GET - {} chiamato", "AdminManageRolesRealmController" ,"/api/admin/rolesRealm/"+userId+"/addRoles");
@@ -42,4 +51,20 @@ public class AdminManageRolesRealmController {
 
         adminRealmService.removeRealmRolesToUser(userId, listRoles);
     }
+
+    //*
+    // Ottiene la lista di tutti i ruoli disponibili a livello di Realm
+    //*
+
+    //*
+    // Creazione di un nuovo ruolo a livello di Realm
+    //*
+
+    //*
+    // Eliminazione di un ruolo a livello di Realm
+    //*
+
+    //*
+    // Dettaglio di un ruolo a livello di Realm
+    //*
 }

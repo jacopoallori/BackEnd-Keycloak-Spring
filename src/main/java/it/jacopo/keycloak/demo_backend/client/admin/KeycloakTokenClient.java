@@ -1,4 +1,4 @@
-package it.jacopo.keycloak.demo_backend.client;
+package it.jacopo.keycloak.demo_backend.client.admin;
 
 import it.jacopo.keycloak.demo_backend.dto.external.KeycloakTokenExternalDTO;
 import lombok.RequiredArgsConstructor;

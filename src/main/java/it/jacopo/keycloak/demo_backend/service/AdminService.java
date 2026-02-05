@@ -1,9 +1,11 @@
 package it.jacopo.keycloak.demo_backend.service;
 
-import it.jacopo.keycloak.demo_backend.client.KeycloakAdminClient;
-import it.jacopo.keycloak.demo_backend.client.KeycloakTokenClient;
+import it.jacopo.keycloak.demo_backend.client.admin.KeycloakAdminClient;
+import it.jacopo.keycloak.demo_backend.client.admin.KeycloakTokenClient;
 import it.jacopo.keycloak.demo_backend.dto.KeycloakUserDTO;
+import it.jacopo.keycloak.demo_backend.dto.UserCreateDTO;
 import it.jacopo.keycloak.demo_backend.dto.UserFilterDTO;
+import it.jacopo.keycloak.demo_backend.dto.external.CreateUserExternalDTO;
 import it.jacopo.keycloak.demo_backend.dto.external.KeycloakUserExternalDTO;
 import it.jacopo.keycloak.demo_backend.mapper.UserDTOMapper;
 import lombok.RequiredArgsConstructor;
@@ -52,5 +54,13 @@ public class AdminService {
             List<KeycloakUserExternalDTO> reponse = keycloakAdminClient.searchUsers(token, userFilterDTO, first, max);
             return mapper.fromDTOExternalToDTO(reponse);
         }
+    }
+
+    //*
+    // Crea un nuovo utente
+    //*
+    public void createUser(UserCreateDTO userCreateDTO) {
+        String token = tokenClient.getAdminAccessToken();
+        keycloakAdminClient.createUser(token, new CreateUserExternalDTO());
     }
 }

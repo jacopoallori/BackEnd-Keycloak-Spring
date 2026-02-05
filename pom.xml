@@ -47,7 +47,7 @@
 			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 
-
+		<!-- TEST -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security-oauth2-resource-server-test</artifactId>
@@ -96,5 +96,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

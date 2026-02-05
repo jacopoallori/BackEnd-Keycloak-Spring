@@ -18,7 +18,7 @@ public class AdminManageRolesClientsController {
     private final AdminClientsService adminClientService;
 
     //*
-    //Dato un id utente ottiene i suoi ruoli
+    //Dato un id utente ottiene i suoi ruoli a livello di Clients
     //*
     @GetMapping(path = "/{id}/getRoleUser")
     public List<KeycloakRoleDTO> getRolesUser(@PathVariable("id") String userId) {
@@ -28,7 +28,7 @@ public class AdminManageRolesClientsController {
     }
 
     //*
-    //Assegna X ruoli ad un utente
+    //Assegna X ruoli ad un utente a livello di Clients
     //*
     @PostMapping("/{id}/addRoles")
     public void addRolesToUser(@PathVariable("id") String userId, @RequestBody List<KeycloakUserRoleDTO> listRoles) {
@@ -39,7 +39,7 @@ public class AdminManageRolesClientsController {
     }
 
     //*
-    //Rimuovi X ruoli ad un utente
+    //Rimuovi X ruoli ad un utente a livello di Clients
     //*
     @PostMapping("/{id}/removeRoles")
     public void removeRolesToUser(@PathVariable("id") String userId, @RequestBody List<KeycloakUserRoleDTO> listRoles) {
@@ -48,4 +48,8 @@ public class AdminManageRolesClientsController {
 
         adminClientService.removeRealmRolesToUser(userId, listRoles);
     }
+
+    //*
+    // Ottiene la lista per i ruoli disponibili a livello di Clients
+    //*
 }

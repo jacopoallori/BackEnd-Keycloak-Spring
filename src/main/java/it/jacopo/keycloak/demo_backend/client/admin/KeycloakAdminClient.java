@@ -1,7 +1,7 @@
-package it.jacopo.keycloak.demo_backend.client;
+package it.jacopo.keycloak.demo_backend.client.admin;
 
-import it.jacopo.keycloak.demo_backend.dto.KeycloakUserDTO;
 import it.jacopo.keycloak.demo_backend.dto.UserFilterDTO;
+import it.jacopo.keycloak.demo_backend.dto.external.CreateUserExternalDTO;
 import it.jacopo.keycloak.demo_backend.dto.external.KeycloakUserExternalDTO;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -104,6 +105,50 @@ public class KeycloakAdminClient {
                 .collectList()
                 .block();
     }
+
+    //*
+    // Creazione di un nuovo utente
+    //*
+    public Mono<String> createUser(String token, CreateUserExternalDTO dto) {
+        return webClient.post()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/admin/realms/{realm}/users")
+                        .build(realm))
+                .headers(h -> h.setBearerAuth(token))
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(dto)
+                .exchangeToMono(response -> {
+                    if (response.statusCode().is2xxSuccessful()) {
+                        return Mono.just(
+                                response.headers()
+                                        .asHttpHeaders()
+                                        .getFirst("Location")
+                        );
+                    }
+                    return response.createException().flatMap(Mono::error);
+                });
+    }
+
+    //*
+    // Aggiornamento dati di utente
+    //*
+
+    //*
+    // Eliminazione di un utente
+    //*
+
+    //*
+    // Abilitazione/Disabilitazione di un utente
+    //*
+
+    //*
+    // Reset Password
+    //*
+
+    //*
+    // Invio verifica email
+    //*
+
 
     private void addIfPresent(UriComponentsBuilder b, String name, String value) {
         if (value != null && !value.isBlank()) b.queryParam(name, value);
