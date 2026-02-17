@@ -14,6 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -161,15 +162,69 @@ public class KeycloakAdminClient {
     //*
     // Abilitazione/Disabilitazione di un utente
     //*
+    public Mono<Void> setUserEnabled(String token, String userId, boolean enabled) {
+        Map<String, Object> body = Map.of("enabled", enabled);
+
+        return webClient.put()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/admin/realms/{realm}/users/{userId}")
+                        .build(realm, userId))
+                .headers(h -> h.setBearerAuth(token))
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(body)
+                .retrieve()
+                .bodyToMono(Void.class);
+    }
 
     //*
     // Reset Password
     //*
+    public Mono<Void> sendResetPasswordEmail(String token, String userId, int lifespanSeconds,
+                                             String clientId, String redirectUri) {
+        List<String> actions = List.of("UPDATE_PASSWORD");
+
+        return webClient.put()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/admin/realms/{realm}/users/{userId}/execute-actions-email")
+                        .queryParam("lifespan", lifespanSeconds)
+                        .queryParam("client_id", clientId)
+                        .queryParam("redirect_uri", redirectUri)
+                        .build(realm, userId))
+                .headers(h -> h.setBearerAuth(token))
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(actions)
+                .retrieve()
+                .bodyToMono(Void.class);
+    }
 
     //*
     // Invio verifica email
     //*
+    public Mono<Void> sendVerifyEmail(String token, String userId, Integer lifespanSec,
+                                String clientId, String redirectUri){
+        return webClient.put()
+                .uri(uriBuilder -> {
+                    var b = uriBuilder
+                            .path("/admin/realms/{realm}/users/{userId}/send-verify-email");
 
+                    if (lifespanSec != null) b = b.queryParam("lifespan", lifespanSec);
+                    if (clientId != null && !clientId.isBlank()) b = b.queryParam("client_id", clientId);
+                    if (redirectUri != null && !redirectUri.isBlank()) b = b.queryParam("redirect_uri", redirectUri);
+
+                    return b.build(realm, userId);
+                })
+                .headers(h -> h.setBearerAuth(token))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(Void.class);
+    }
+
+    //*
+    // Reset password utente for admin
+    //*
+    public Mono<Void> sendVerifyEmailForAdmin(String token, String userId){
+        return null;
+    }
 
     private void addIfPresent(UriComponentsBuilder b, String name, String value) {
         if (value != null && !value.isBlank()) b.queryParam(name, value);

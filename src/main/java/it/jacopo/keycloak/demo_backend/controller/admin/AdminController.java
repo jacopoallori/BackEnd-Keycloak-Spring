@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminController {
     private static final Logger log = LoggerFactory.getLogger(AdminController.class);
-    private final AdminService userService;
+    private final AdminService adminService;
 
     //*
     //Ottiene La lista di tutti gli utenti
@@ -25,7 +25,7 @@ public class AdminController {
     public List<KeycloakUserDTO> getUsers() {
         log.info("Chiamata Controller: {}, GET - {}", "AdminController" ,"/api/admin/getUsers");
 
-        List<KeycloakUserDTO> response = userService.getAllUsers();
+        List<KeycloakUserDTO> response = adminService.getAllUsers();
 
         log.info("Response: {}", response);
         return response;
@@ -52,7 +52,7 @@ public class AdminController {
                 "/api/admin/getUsers/filter",
                 id, username, firstName, lastName, email, emailVerified, createdTimestamp, enabled,first, max);
 
-        List<KeycloakUserDTO> response = userService.getUsersFiltered(id, username, firstName, lastName, email, emailVerified, createdTimestamp, enabled,first, max);
+        List<KeycloakUserDTO> response = adminService.getUsersFiltered(id, username, firstName, lastName, email, emailVerified, createdTimestamp, enabled,first, max);
 
         log.info("Response: {}", response);
         return response;
@@ -66,7 +66,7 @@ public class AdminController {
         log.info("Controller: {}, GET - {}", "AdminController" ,"/api/admin/user/create");
         log.info("Request Body: roles={}", newUser.toString());
 
-        userService.createUser(newUser);
+        adminService.createUser(newUser);
     }
 
     //*
@@ -77,7 +77,7 @@ public class AdminController {
         log.info("Controller: {}, PUT - {}, per UserId: {}", "AdminController" ,"/api/admin/user/update/{userId}", userId);
         log.info("Request Body: userId={}, updateUser={}", userId, updateUser.toString());
 
-        userService.updateUser(userId, updateUser);
+        adminService.updateUser(userId, updateUser);
     }
 
     //*
@@ -87,18 +87,52 @@ public class AdminController {
     public void deleteUser(@PathVariable String userId) {
         log.info("Controller: {}, Delete - {}, per UserId: {}", "AdminController" ,"/api/admin/user/delete/{userId}", userId);
 
-        userService.deleteUser(userId);
+        adminService.deleteUser(userId);
     }
 
     //*
-    // Abilita/disabilita utente
+    // Abilita utente
     //*
+    @PutMapping("user/{userId}/enable")
+    public void enableUser(@PathVariable String userId) {
+        log.info("Controller: {}, Put - {}, per UserId: {}", "AdminController" ,"/api/admin/user/{userId}/enable", userId);
+        adminService.setUserEnabled(userId, true);
+    }
+
+    //*
+    // Disabilita utente
+    //*
+    @PutMapping("user/{userId}/disable")
+    public void disableUser(@PathVariable String userId) {
+        log.info("Controller: {}, Put - {}, per UserId: {}", "AdminController" ,"/api/admin/user/{userId}/disable", userId);
+        adminService.setUserEnabled(userId, false);
+    }
 
     //*
     // Reset Password
     //*
+    @PutMapping("user/resetPassword/email/{userId}")
+    //public Mono<ResponseEntity<Void>> sendResetPasswordEmail(
+    public void sendResetPasswordEmail(@PathVariable String userId) {
+        log.info("Controller: {}, Put - {}, per UserId: {}", "AdminController" ,"/api/admin/user/resetPassword/email/{userId}", userId);
+        adminService.sendResetPasswordEmail(userId);
+    }
 
     //*
-    // Verifica mail
+    // Verifica mail - inviare all’utente una mail di verifica dell’indirizzo email
     //*
+    @PutMapping("user/sendVerifyEmail/{userId}")
+    public void sendVerifyEmail(@PathVariable String userId){
+        log.info("Controller: {}, Put - {}, per UserId: {}", "AdminController" ,"/api/admin/user/sendVerifyEmail/{userId}", userId);
+        adminService.sendVerifyEmail(userId);
+    }
+
+    //*
+    // Verifica mail - Admin confermata indirizzo email utente
+    //*
+    @PutMapping("user/adminVerifyEmail/{userId}")
+    public void adminVerifyEmail(@PathVariable String userId){
+        log.info("Controller: {}, Put - {}, per UserId: {}", "AdminController" ,"/api/admin/user/adminVerifyEmail/{userId}", userId);
+        adminService.sendVerifyEmailForAdmin(userId);
+    }
 }

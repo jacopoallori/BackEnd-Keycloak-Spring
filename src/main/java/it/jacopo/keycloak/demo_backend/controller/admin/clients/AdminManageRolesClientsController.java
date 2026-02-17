@@ -52,4 +52,16 @@ public class AdminManageRolesClientsController {
     //*
     // Ottiene la lista per i ruoli disponibili a livello di Clients
     //*
+
+    //*
+    // Creazione di un nuovo ruolo a livello di Realm
+    //*
+
+    //*
+    // Eliminazione di un ruolo a livello di Realm
+    //*
+
+    //*
+    // Dettaglio di un ruolo a livello di Realm
+    //*
 }

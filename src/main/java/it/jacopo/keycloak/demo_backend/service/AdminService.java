@@ -81,4 +81,36 @@ public class AdminService {
         String token = tokenClient.getAdminAccessToken();
         keycloakAdminClient.deleteUser(token, userId);
     }
+
+    //*
+    // Abilita/Disabilita un utente
+    //*
+    public void setUserEnabled(String userId, boolean enabled){
+        String token = tokenClient.getAdminAccessToken();
+        keycloakAdminClient.setUserEnabled(token, userId, enabled);
+    }
+
+    //*
+    // Reset password utente
+    //*
+    public void sendResetPasswordEmail(String userId){
+        String token = tokenClient.getAdminAccessToken();
+        keycloakAdminClient.sendResetPasswordEmail(token, userId,1,null, null);
+    }
+
+    //*
+    // Reset password utente per mail
+    //*
+    public void sendVerifyEmail(String userId){
+        String token = tokenClient.getAdminAccessToken();
+        keycloakAdminClient.sendVerifyEmail(token, userId,1,null, null);
+    }
+
+    //*
+    // Reset password utente for admin
+    //*
+    public void sendVerifyEmailForAdmin(String userId){
+        String token = tokenClient.getAdminAccessToken();
+        keycloakAdminClient.sendVerifyEmailForAdmin(token, userId);
+    }
 }
