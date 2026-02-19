@@ -3,7 +3,7 @@ package it.jacopo.keycloak.demo_backend.controller.users;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Gestisce il ciclo di vita dell'utente(Anagrafica e stato), Azioni:
+ * Controller destinato al gestire il ciclo di vita degli utenti
  * Get di un utente con filtri e non
  * Dettaglio di un utente
  * Crea un nuovo utente

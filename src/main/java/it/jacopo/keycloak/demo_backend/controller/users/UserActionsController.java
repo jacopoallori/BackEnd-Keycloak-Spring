@@ -3,7 +3,7 @@ package it.jacopo.keycloak.demo_backend.controller.users;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Gestisce le azioni operative dell'utente, Azioni:
+ * Controller destinato a gestire le azioni operative dell'utente.
  * Abilitazione di un utente
  * Disabilitazione di un utente
  * Reset password di un utente
