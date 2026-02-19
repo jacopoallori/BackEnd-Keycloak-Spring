@@ -11,8 +11,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-public class DemoController {
-    private static final Logger log = LoggerFactory.getLogger(DemoController.class);
+public class MainController {
+    private static final Logger log = LoggerFactory.getLogger(MainController.class);
 
     @GetMapping("/junior/azione")
     public Map<String, String> junior() {
