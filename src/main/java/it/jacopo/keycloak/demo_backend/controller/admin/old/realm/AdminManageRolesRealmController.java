@@ -1,4 +1,4 @@
-package it.jacopo.keycloak.demo_backend.controller.admin.realm;
+package it.jacopo.keycloak.demo_backend.controller.admin.old.realm;
 
 import it.jacopo.keycloak.demo_backend.dto.KeycloakRoleDTO;
 import it.jacopo.keycloak.demo_backend.dto.KeycloakUserRoleDTO;

@@ -1,4 +1,4 @@
-package it.jacopo.keycloak.demo_backend.controller.admin;
+package it.jacopo.keycloak.demo_backend.controller.admin.old;
 
 import it.jacopo.keycloak.demo_backend.dto.KeycloakUserDTO;
 import it.jacopo.keycloak.demo_backend.dto.UserCreateDTO;

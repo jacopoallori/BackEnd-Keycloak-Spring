@@ -1,4 +1,4 @@
-package it.jacopo.keycloak.demo_backend.controller.admin.clients;
+package it.jacopo.keycloak.demo_backend.controller.admin.old.clients;
 
 import it.jacopo.keycloak.demo_backend.dto.KeycloakRoleDTO;
 import it.jacopo.keycloak.demo_backend.dto.KeycloakUserRoleDTO;
