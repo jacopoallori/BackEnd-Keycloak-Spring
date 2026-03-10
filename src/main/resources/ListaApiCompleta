@@ -1,0 +1,298 @@
+Struttura API:
+
+
+0) RealmController
+
+/api/admin/realm
+
+GET / → info realm corrente (nome realm, impostazioni principali)
+
+PUT / → aggiorna impostazioni realm (solo ciò che vuoi esporre)
+
+GET /keys → chiavi/certificati del realm (JWK / keys)
+
+GET /events/config → stato configurazione eventi (se abilitati/retention)
+
+PUT /events/config → abilita/disabilita eventi (se vuoi gestirlo da backoffice)
+
+1) UserCrudController
+
+/api/admin/users
+
+CRUD + ricerca
+
+GET / → lista utenti (search/paging/filters: username, email, enabled, first, max)
+
+GET /{userId} → dettaglio utente
+
+POST / → crea utente
+
+PUT /{userId} → aggiorna utente
+
+DELETE /{userId} → elimina utente
+
+2) UserActionsController
+
+/api/admin/users/{userId}/actions
+
+Azioni operative (bottoni backoffice)
+
+PUT /enable
+
+PUT /disable
+
+PUT /reset-password → reset/imposta password (temporary o no)
+
+POST /send-verify-email
+
+POST /execute-actions-email → es. UPDATE_PASSWORD, VERIFY_EMAIL, CONFIGURE_TOTP
+
+POST /logout → logout forzato (se supportato/useful)
+
+Nota: “logout” e “sessions” hanno senso soprattutto con login browser/SSO. Se nel tuo contesto non ci sono user sessions, l’endpoint può restare ma potrebbe tornare “vuoto” o “non applicabile”.
+
+3) UserRelationsController
+
+/api/admin/users/{userId}
+
+Gruppi dell’utente
+
+GET /groups → gruppi assegnati
+
+PUT /groups/{groupId} → aggiungi utente al gruppo
+
+DELETE /groups/{groupId} → rimuovi utente dal gruppo
+
+Ruoli dell’utente (diretti)
+
+GET /roles → ruoli assegnati (realm + client)
+
+GET /roles/realm
+
+POST /roles/realm → assegna (array)
+
+DELETE /roles/realm → rimuovi (array)
+
+GET /roles/clients/{clientUuid}
+
+POST /roles/clients/{clientUuid} → assegna (array id+name)
+
+DELETE /roles/clients/{clientUuid} → rimuovi (array id+name)
+
+Ruoli “effettivi” (utile per spiegare permessi)
+
+GET /roles/effective
+
+GET /roles/clients/{clientUuid}/effective
+
+Sessioni (solo se utili nel tuo flow)
+
+GET /sessions → sessioni attive
+
+GET /sessions/offline/{clientUuid} → offline sessions (opzionale)
+
+Audit accessi (consigliato sempre)
+
+GET /events → eventi utente (filtri: type, dateFrom, dateTo, first, max)
+
+GET /login-history → scorciatoia (LOGIN)
+
+GET /login-errors → scorciatoia (LOGIN_ERROR)
+
+4) GroupCrudController
+
+/api/admin/groups
+
+CRUD gruppi
+
+GET / → lista gruppi
+
+GET /{groupId} → dettaglio gruppo
+
+POST / → crea gruppo
+
+PUT /{groupId} → aggiorna gruppo
+
+DELETE /{groupId} → elimina gruppo
+
+Membership
+
+GET /{groupId}/members
+
+PUT /{groupId}/members/{userId} → aggiungi membro
+
+DELETE /{groupId}/members/{userId} → rimuovi membro
+
+5) GroupRoleMappingsController
+
+/api/admin/groups/{groupId}/role-mappings
+
+Realm roles sul gruppo
+
+GET /realm
+
+POST /realm → assegna (array)
+
+DELETE /realm → rimuovi (array)
+
+Client roles sul gruppo
+
+GET /clients/{clientUuid}
+
+POST /clients/{clientUuid} → assegna (array id+name)
+
+DELETE /clients/{clientUuid} → rimuovi (array id+name)
+
+6) RolesCatalogController
+
+/api/admin/roles
+
+Realm roles (catalogo)
+
+GET /realm
+
+GET /realm/{roleName}
+
+POST /realm
+
+DELETE /realm/{roleName}
+
+Client roles (catalogo)
+
+GET /clients/{clientUuid}
+
+GET /clients/{clientUuid}/{roleName}
+
+POST /clients/{clientUuid}
+
+DELETE /clients/{clientUuid}/{roleName}
+
+7) ClientsController
+
+/api/admin/clients
+
+CRUD client
+
+GET / → lista clients + search
+
+GET /{clientUuid} → dettaglio client
+
+POST / → crea client
+
+PUT /{clientUuid} → aggiorna client
+
+DELETE /{clientUuid} → elimina client
+
+Service account (integrazioni)
+
+GET /{clientUuid}/service-account-user
+
+GET /{clientUuid}/service-account-user/roles
+
+POST /{clientUuid}/service-account-user/role-mappings/realm
+
+DELETE /{clientUuid}/service-account-user/role-mappings/realm
+
+POST /{clientUuid}/service-account-user/role-mappings/clients/{targetClientUuid}
+
+DELETE /{clientUuid}/service-account-user/role-mappings/clients/{targetClientUuid}
+
+Client scopes assegnati al client
+
+GET /{clientUuid}/default-client-scopes
+
+PUT /{clientUuid}/default-client-scopes/{scopeId}
+
+DELETE /{clientUuid}/default-client-scopes/{scopeId}
+
+GET /{clientUuid}/optional-client-scopes
+
+PUT /{clientUuid}/optional-client-scopes/{scopeId}
+
+DELETE /{clientUuid}/optional-client-scopes/{scopeId}
+
+8) ClientScopesController
+
+/api/admin/client-scopes
+
+CRUD client scopes
+
+GET /
+
+GET /{scopeId}
+
+POST /
+
+PUT /{scopeId}
+
+DELETE /{scopeId}
+
+Protocol mappers dello scope
+
+GET /{scopeId}/protocol-mappers
+
+POST /{scopeId}/protocol-mappers
+
+PUT /{scopeId}/protocol-mappers/{mapperId}
+
+DELETE /{scopeId}/protocol-mappers/{mapperId}
+
+9) ProtocolMappersController
+
+/api/admin/protocol-mappers
+
+Mappers diretti su client
+
+GET /clients/{clientUuid}
+
+POST /clients/{clientUuid}
+
+PUT /clients/{clientUuid}/{mapperId}
+
+DELETE /clients/{clientUuid}/{mapperId}
+
+10) IdentityProvidersController
+
+/api/admin/identity-providers
+
+CRUD IdP
+
+GET /
+
+GET /{alias}
+
+POST /
+
+PUT /{alias}
+
+DELETE /{alias}
+
+Mapper IdP
+
+GET /{alias}/mappers
+
+POST /{alias}/mappers
+
+PUT /{alias}/mappers/{mapperId}
+
+DELETE /{alias}/mappers/{mapperId}
+
+11) EventsController (globale)
+
+/api/admin/events
+
+GET / → eventi realm (filtri: type, user, client, dateFrom, dateTo, first, max)
+
+GET /admin → admin events (audit operazioni admin)
+
+DELETE / → pulizia eventi (opzionale, se vuoi esporla)
+
+12) SystemController
+
+/api/admin/system
+
+GET /health → health del tuo backend + reachability Keycloak
+
+GET /whoami → info admin loggato (claims/ruoli)
+
+GET /config → config runtime (base url keycloak, realm default, feature flags)

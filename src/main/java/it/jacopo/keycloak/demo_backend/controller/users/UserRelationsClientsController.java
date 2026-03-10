@@ -22,7 +22,7 @@ public class UserRelationsClientsController {
     /**
      * Aggiungi ruolo a un utente a livello di clients
      */
-    @PostMapping("clients/{userId}/{groupId}")
+    @PostMapping("clients/{userId}")
     public void addRoleToUser(){
 
     }
@@ -30,7 +30,7 @@ public class UserRelationsClientsController {
     /**
      * Rimuovi ruolo a un utente a livello di clients
      */
-    @DeleteMapping("clients/{userId}/{groupId}")
+    @DeleteMapping("clients/{userId}")
     public void removeRoleToUser() {
 
     }

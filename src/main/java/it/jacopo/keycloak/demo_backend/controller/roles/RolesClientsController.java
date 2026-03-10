@@ -15,7 +15,7 @@ public class RolesClientsController {
     /**
      * restutuisce tutti i ruoli disponibili a livello di realm
      */
-    @GetMapping("realm/getRoles")
+    @GetMapping("clients/getRoles")
     public void getRoles() {
 
     }
@@ -23,7 +23,7 @@ public class RolesClientsController {
     /**
      * crea un nuovo ruolo a livello di realm
      */
-    @PostMapping("realm/createRole")
+    @PostMapping("clients/createRole")
     public void createRole() {
 
     }
@@ -31,7 +31,7 @@ public class RolesClientsController {
     /**
      * elimina un ruolo a livello di realm
      */
-    @DeleteMapping("realm/deleteRole")
+    @DeleteMapping("clients/deleteRole")
     public void deleteRole() {
 
     }

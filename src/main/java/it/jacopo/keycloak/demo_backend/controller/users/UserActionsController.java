@@ -34,7 +34,7 @@ public class UserActionsController {
     /**
      * Reset password di un utente
      */
-    @PostMapping("{userId)/resetPassword")
+    @PostMapping("{userId}/resetPassword")
     public void resetPassword(){
 
     }

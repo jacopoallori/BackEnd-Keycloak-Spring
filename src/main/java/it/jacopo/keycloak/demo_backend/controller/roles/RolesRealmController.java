@@ -31,7 +31,7 @@ public class RolesRealmController {
     /**
      * elimina un ruolo a livello di realm
      */
-    @DeleteMapping("realm/deleteRole")
+    @DeleteMapping("realm/deleteRole1")
     public void deleteRole() {
 
     }
