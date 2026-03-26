@@ -47,6 +47,13 @@
 			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 
+		<!-- Dipendenza utilizzata per chiamare le API keycloak da Un Client Java -->
+<!--		<dependency>-->
+<!--			<groupId>org.keycloak</groupId>-->
+<!--			<artifactId>keycloak-admin-client</artifactId>-->
+<!--			<version>26.0.8</version>-->
+<!--		</dependency>-->
+
 		<!-- TEST -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
